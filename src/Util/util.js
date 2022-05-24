@@ -24,6 +24,17 @@ export function getWinner(cells) {
 //If the function checks if board is full it should get a Board as a paramter.
 //Although a Board is just an array of cells..
 export function isBoardFull(cells) {
-  const freeCellsAmount = _.filter(cells, "").length;
-  console.log("freeCellsAmount >>> ", freeCellsAmount);
+  const freeCellsAmount = _.filter(cells, (cell) => cell === "").length;
+  return freeCellsAmount === 0;
+}
+
+export function getGameStatus(cells) {
+  const winner = getWinner(cells);
+  if (winner) {
+    return { status: "over", winner };
+  }
+  if (isBoardFull(cells)) {
+    return { status: "over", winner: "Draw" };
+  }
+  return { status: "running", winner: "" };
 }

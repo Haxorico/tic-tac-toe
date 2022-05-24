@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { getWinner, isBoardFull } from "../../Util/util";
+import { getGameStatus } from "../../Util/util";
 import Row from "./Row";
-// import Square from "../Square/Square";
-// import { calculateWinner } from "../../Util/util";
 
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
@@ -16,20 +14,22 @@ export default function Board() {
       setError("Cell is already taken. Pick another cell");
       return;
     }
-
+    if (error) setError("");
     cells[cellNumber] = xIsNext ? "X" : "O";
 
-    if (getWinner(cells)) {
-      setWinner(cells[cellNumber]);
+    const gameStatus = getGameStatus(cells);
+    if (gameStatus.status === "over") {
+      setWinner(gameStatus.winner);
     }
 
     setSquares(cells);
     setXIsNext((prevState) => !prevState);
-    isBoardFull(cells);
   };
 
   const status = winner
-    ? `Winner :${winner}`
+    ? winner === "Draw"
+      ? "Draw"
+      : `Winner :${winner}`
     : "Next Player: " + (xIsNext ? "X" : "O");
 
   return (
